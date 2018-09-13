@@ -10,21 +10,21 @@ from http.server import *
 import http.client
 
 class ZhwikiHandler(BaseHTTPRequestHandler):
-	def do_GET(self):
-		self.log_request()
-		del self.headers['Host']
-		self.headers['Host'] = 'zh.wikipedia.org'
-		remote = http.client.HTTPSConnection("www.wikipedia.org")
-		remote.request(self.command, self.path, headers=self.headers)
-		res = remote.getresponse()
-		print(res.status, res.reason)
-		self.send_response(res.status, res.reason)
-		for header, value in res.getheaders():
-			value = value.replace('https://zh.wikipedia.org','http://127.0.0.1')
-			self.send_header(header, value)
-		self.end_headers()
-		self.wfile.write(res.read().replace(b'https://zh.wikipedia.org',b'http://127.0.0.1').replace(b'zh.wikipedia.org',b'127.0.0.1'))
-		remote.close()
+    def do_GET(self):
+        self.log_request()
+        del self.headers['Host']
+        self.headers['Host'] = 'zh.wikipedia.org'
+        remote = http.client.HTTPSConnection("www.wikipedia.org")
+        remote.request(self.command, self.path, headers=self.headers)
+        res = remote.getresponse()
+        print(res.status, res.reason)
+        self.send_response(res.status, res.reason)
+        for header, value in res.getheaders():
+            value = value.replace('https://zh.wikipedia.org','http://127.0.0.1')
+            self.send_header(header, value)
+        self.end_headers()
+        self.wfile.write(res.read().replace(b'https://zh.wikipedia.org',b'http://127.0.0.1').replace(b'zh.wikipedia.org',b'127.0.0.1'))
+        remote.close()
 
 server_address = ('127.0.0.1', 80)
 httpd = ThreadingHTTPServer(server_address, ZhwikiHandler)
